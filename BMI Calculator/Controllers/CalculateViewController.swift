@@ -8,8 +8,10 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class CalculateViewController: UIViewController {
 
+    var bmiValue = "0.0"
+    
     @IBOutlet weak var heightLabel: UILabel!
     @IBOutlet weak var weightLabel: UILabel!
     @IBOutlet weak var heightSlider: UISlider!
@@ -18,7 +20,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
-
 
     @IBAction func weightSliderChange(_ sender: UISlider) {
         weightLabel.text = String(Int(sender.value)) + "Kg"
@@ -30,12 +31,24 @@ class ViewController: UIViewController {
         let height = heightSlider.value
         let weight = weightSlider.value
 //        let BMI = Float(weight) / pow(Float(height),Float(2))
-        let BMI = weight / pow(height,2)
+        let bmi = weight / pow(height,2)
+        bmiValue = String(format: "%.1f", bmi)
         
-        let secondVC = SecondViewController()
-        secondVC.bmiValue = String(format: "%.1f", BMI)
-        self.present(secondVC, animated: true, completion: nil)
+        
+        self.performSegue(withIdentifier: "goToResult", sender: self)
         
     }
+    
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        if segue.identifier == "goToResult" {
+            let destinationVC = segue.destination as! ResultViewController
+            destinationVC.bmiValue = bmiValue
+//            print("bmiValue is: " + bmiValue)
+        }
+        // Pass the selected object to the new view controller.
+    }
+    
 }
 
